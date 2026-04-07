@@ -1,0 +1,27 @@
+services:
+  web:
+    build: .                                #build using dockerfile in project root
+    ports:
+      - "4000:4000"                         #expose app on localhost:4000
+    depends_on:
+      - db                                  #ensure db starts before web
+    networks:
+      - appnet                              #connect to custom network
+
+  db:
+    image: postgres:15                      #Postgres SQL database
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: mydb
+    ports:
+      - "5000:5432"                         #host port 5000 --> container port 5432
+    volumes:
+      - db_data:/var/lib/postgresql/data    #persist db data
+    networks:
+      - appnet
+
+volumes:
+  db_data:
+networks:
+  appnet:
