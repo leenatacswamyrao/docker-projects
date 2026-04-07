@@ -15,7 +15,7 @@ const pool = new Pool({
 app.get('/', async (req, res) => {
     try {
         const result = await pool.query('SELECT NOW()');
-        res.send('Postgres connected! Server time: ${result.rows[0].now}');
+        res.send(`Postgres connected! Server time: ${result.rows[0].now.toString()}`);
     } catch (err){
         console.error(err);
         res.status(500).send('Database connection failed :(');
