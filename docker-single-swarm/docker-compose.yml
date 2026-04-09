@@ -1,0 +1,30 @@
+services:
+  web:
+    image: nginx:alpine
+    deploy: 
+      replicas: 2
+    ports:
+      - "8080:80"
+    networks:
+      - frontend
+  
+  app:
+    image: httpd:alpine
+    deploy:
+      replicas: 3
+    networks:
+      - frontend
+      - backend
+  
+  redis:
+    image: redis:alpine
+    deploy:
+      replicas: 1
+    networks:
+      - backend
+
+networks:
+  frontend:
+    driver: overlay
+  backend:
+    driver: overlay

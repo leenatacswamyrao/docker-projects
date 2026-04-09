@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    hostname: zookeeper
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - kafka-net
+
+  kafka-broker-1:
+    image: confluentinc/cp-kafka:7.5.0
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 60s
+        max_attempts: 3
+    ports:
+      - target: 9092
+        published: 9092
+        mode: host
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-1:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_ZOOKEEPER_CONNECTION_TIMEOUT_MS: 60000
+    networks:
+      - kafka-net
+
+  kafka-broker-2:
+    image: confluentinc/cp-kafka:7.5.0
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 60s
+        max_attempts: 3
+    ports:
+      - target: 9093
+        published: 9093
+        mode: host
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker-2:29092,PLAINTEXT_HOST://localhost:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_ZOOKEEPER_CONNECTION_TIMEOUT_MS: 60000
+    networks:
+      - kafka-net
+
+networks:
+  kafka-net:
+    driver: overlay
