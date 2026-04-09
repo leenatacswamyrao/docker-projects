@@ -1,0 +1,11 @@
+{
+    "name": "docker-node-app",
+    "version": "1.0.0",
+    "scripts":{
+        "build": "cp -r src dist",
+        "start": "node dist/index.js"
+    },
+    "dependencies": {
+        "express": "^5.2.1"
+    }
+}
