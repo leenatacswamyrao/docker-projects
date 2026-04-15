@@ -13,3 +13,13 @@
 - `docker tag <source> <target>` - Rename image
 - `docker push <image>` - Upload to Docker Hub
 - `docker pull <image>` - Download from Docker Hub
+
+## Architecture
+
+Local Machine           Docker Hub              Remote Machine
+┌─────────────┐        ┌──────────┐           ┌─────────────┐
+│  Dockerfile │──build→│   Image  │←──pull────│   Docker    │
+│             │        │  Stored  │           │   Engine    │
+│  docker     │──push─→│   Here   │           │             │
+│  build      │        │          │           │             │
+└─────────────┘        └──────────┘           └─────────────┘
