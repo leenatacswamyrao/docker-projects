@@ -1,0 +1,13 @@
+filebeat.autodiscover:
+  providers:
+    - type: docker
+      host: "unix:///var/run/docker.sock"
+      hints.enabled: true
+
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+
+setup.kibana:
+  host: "http://kibana:5601"
+
+logging.level: info
